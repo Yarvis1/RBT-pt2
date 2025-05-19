@@ -220,7 +220,27 @@ Node* findMin(Node* node) {
     return node;
 }
 
-// delete
+void transplant(){
+
+}
+
+Node* getSibling(){
+
+}
+
+void fixdeleteforRBT(){
+
+}
+
+void deleteNode(Node*& root, int val) {
+  Node* z = search(root,key);//check if in list
+  if(!z) return;
+
+  Node* y=z;
+  Node* x= nullptr;
+  int ycolor = y->color;
+}
+
 Node* deleteNodeHelper(Node* root, int val) {
     if (root == nullptr) return root;
 
@@ -247,8 +267,3 @@ Node* deleteNodeHelper(Node* root, int val) {
     return root;
 }
 
-
-
-void deleteNode(Node*& root, int val) {
-    root = deleteNodeHelper(root, val);
-}
