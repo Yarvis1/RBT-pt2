@@ -221,15 +221,54 @@ Node* findMin(Node* node) {
 }
 
 void transplant(Node*& root, Node* u, Node* v){
-
+if (u->parent == nullptr)
+        root = v;
+    else if (u == u->parent->left)
+        u->parent->left = v;
+    else
+        u->parent->right = v;
+    if (v)
+        v->parent = u->parent;
 }
 
-Node* getSibling(){
-
+Node* getSibling(Node* node){
+if(!node || !node->parent)return NULL;
+if(node==node->parent->left) return node->parent->right;
+else{
+    return node->parent->left;
+   }
 }
 
-void fixdeleteforRBT(){
+void fixdeleteforRBT(Node*& root, Node* x){
+ // Loop until fix reaches root or is red
+    while (fix != root && (!fix || fix->color == 0)) {
+        Node* sibling = getSibling(fix);
 
+        // If fix is a left child
+        if (fix == fix->parent->left) {
+            // Case 1: Sibling is red
+            if (sibling && sibling->color == 1) {
+               
+            }
+
+            // Case 2: Sibling and its children are black
+            if ((!sibling->left || sibling->left->color == 0) &&
+                (!sibling->right || sibling->right->color == 0)) {
+               
+            } else {
+                // Case 3: Sibling's right child is black, left is red
+                if (!sibling->right || sibling->right->color == 0) {
+                  
+                }
+
+                // Case 4: Sibling's right child is red
+               
+            }
+        } 
+	else {
+//same as above but for right child
+
+            
 }
 
 void deleteNode(Node*& root, int val) {
@@ -274,7 +313,7 @@ void deleteNode(Node*& root, int val) {
     delete z;
 
     if (delOriginalColor == 0) {
-        
+        fixDelete(root,x);
     }
 
 	
