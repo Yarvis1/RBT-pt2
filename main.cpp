@@ -8,6 +8,9 @@
 
 using namespace std;
 
+void transplant();
+Node* getSibling();
+void fixdeleteforRBT();
 void RBInsert(Node*& root, int key);
 Node* BSTinsert(Node* root, Node* newNode);
 void print(Node* root, int space, int count);
