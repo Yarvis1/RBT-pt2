@@ -236,9 +236,39 @@ void deleteNode(Node*& root, int val) {
   Node* z = search(root,key);//check if in list
   if(!z) return;
 
-  Node* y=z;
-  Node* x= nullptr;
-  int ycolor = y->color;
+  Node* del=z;
+  Node* fix= nullptr;
+  int delcolor = del->color;
+
+   if (z->left == nullptr) {
+        // if no LC transplant with RC
+       
+    } else if (z->right == nullptr) {
+        // if no RC transplant with LC
+        
+    } else {
+        // if have both children find min to the right
+       
+
+        // if del node is a direct child of z
+        if (del->parent == z) {
+            if (fix) fix->parent = del;
+        } else {
+            // transplant del with its RC
+            
+        }
+
+        // tranplant z with del
+      
+    }
+
+    delete z;
+
+    if (delOriginalColor == 0) {
+        
+    }
+
+	
 }
 
 Node* deleteNodeHelper(Node* root, int val) {
