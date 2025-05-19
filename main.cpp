@@ -220,7 +220,7 @@ Node* findMin(Node* node) {
     return node;
 }
 
-void transplant(){
+void transplant(Node*& root, Node* u, Node* v){
 
 }
 
@@ -242,24 +242,33 @@ void deleteNode(Node*& root, int val) {
 
    if (z->left == nullptr) {
         // if no LC transplant with RC
-       
+        fix = z->right;
+        transplant(root, z, z->right);
     } else if (z->right == nullptr) {
         // if no RC transplant with LC
-        
+         fix = z->left;
+        transplant(root, z, z->left);
     } else {
         // if have both children find min to the right
-       
+        del = findMin(z->right);
+        delOriginalColor = del->color;
+        fix = del->right;
 
         // if del node is a direct child of z
         if (del->parent == z) {
             if (fix) fix->parent = del;
         } else {
             // transplant del with its RC
-            
+            transplant(root, del, del->right);
+            del->right = z->right;
+            del->right->parent = del;
         }
 
         // tranplant z with del
-      
+      transplant(root, z, del);
+        del->left = z->left;
+        del->left->parent = del;
+        del->color = z->color;//copy color
     }
 
     delete z;
