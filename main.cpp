@@ -8,15 +8,14 @@
 
 using namespace std;
 
-void transplant();
-Node* getSibling();
-void fixdeleteforRBT();
+void transplant(Node*& root, Node* u, Node* v);
+Node* getSibling(Node* node);
+void fixdeleteforRBT(Node*& root, Node* x);
 void RBInsert(Node*& root, int key);
 Node* BSTinsert(Node* root, Node* newNode);
 void print(Node* root, int space, int count);
 Node* search(Node* root, int val);
 Node* findMin(Node* node);
-Node* deleteNodeHelper(Node* root, int val);
 void deleteNode(Node*& root, int val);
 void fixBSTforRBTinsert(Node*& root, Node* z);
 void rightRotate(Node*& root, Node* x);
@@ -239,7 +238,7 @@ else{
    }
 }
 
-void fixdeleteforRBT(Node*& root, Node* x){
+void fixdeleteforRBT(Node*& root, Node* fix){
  // Loop until fix reaches root or is red
     while (fix != root && (!fix || fix->color == 0)) {
         Node* sibling = getSibling(fix);
@@ -248,36 +247,79 @@ void fixdeleteforRBT(Node*& root, Node* x){
         if (fix == fix->parent->left) {
             // Case 1: Sibling is red
             if (sibling && sibling->color == 1) {
-               
+               sibling->color = 0;
+                fix->parent->color = 1;
+                leftRotate(root, fix->parent);
+                sibling = fix->parent->right;
             }
 
             // Case 2: Sibling and its children are black
             if ((!sibling->left || sibling->left->color == 0) &&
                 (!sibling->right || sibling->right->color == 0)) {
-               
+                sibling->color = 1;
+                fix = fix->parent;
             } else {
                 // Case 3: Sibling's right child is black, left is red
                 if (!sibling->right || sibling->right->color == 0) {
-                  
+                    sibling->left->color = 0;
+                    sibling->color = 1;
+                    rightRotate(root, sibling);
+                    sibling = fix->parent->right;
                 }
 
                 // Case 4: Sibling's right child is red
-               
+                sibling->color = fix->parent->color;
+                fix->parent->color = 0;
+                if (sibling->right)
+                    sibling->right->color = 0;
+                leftRotate(root, fix->parent);
+                fix = root;
             }
         } 
 	else {
 //same as above but for right child
+            if (sibling && sibling->color == 1) {
+                sibling->color = 0;
+                fix->parent->color = 1;
+                rightRotate(root, fix->parent);
+                sibling = fix->parent->left;
+            }
 
-            
+            if ((!sibling->left || sibling->left->color == 0) &&
+                (!sibling->right || sibling->right->color == 0)) {
+                sibling->color = 1;
+                fix = fix->parent;
+            } else {
+                if (!sibling->left || sibling->left->color == 0) {
+                    if (sibling->right)
+                        sibling->right->color = 0;
+                    sibling->color = 1;
+                    leftRotate(root, sibling);
+                    sibling = fix->parent->left;
+                }
+
+                sibling->color = fix->parent->color;
+                fix->parent->color = 0;
+                if (sibling->left)
+                    sibling->left->color = 0;
+                rightRotate(root, fix->parent);
+                fix = root;
+            }
+        }
+    }
+    //make sure node is black
+	if(fix){
+	fix->color=0;
+	}
 }
 
 void deleteNode(Node*& root, int val) {
-  Node* z = search(root,key);//check if in list
+  Node* z = search(root,val);//check if in list
   if(!z) return;
 
   Node* del=z;
   Node* fix= nullptr;
-  int delcolor = del->color;
+  int delColor = del->color;
 
    if (z->left == nullptr) {
         // if no LC transplant with RC
@@ -290,7 +332,7 @@ void deleteNode(Node*& root, int val) {
     } else {
         // if have both children find min to the right
         del = findMin(z->right);
-        delOriginalColor = del->color;
+        delColor = del->color;
         fix = del->right;
 
         // if del node is a direct child of z
@@ -312,36 +354,10 @@ void deleteNode(Node*& root, int val) {
 
     delete z;
 
-    if (delOriginalColor == 0) {
-        fixDelete(root,x);
+    if (delColor == 0) {
+        fixdeleteforRBT(root,fix);
     }
 
 	
-}
-
-Node* deleteNodeHelper(Node* root, int val) {
-    if (root == nullptr) return root;
-
-    if (val < root->token) {
-        root->left = deleteNodeHelper(root->left, val);
-    } else if (val > root->token) {
-        root->right = deleteNodeHelper(root->right, val);
-    } else {
-        if (root->left == nullptr) {
-            Node* temp = root->right;
-            delete root;
-            return temp;
-        }
-        if (root->right == nullptr) {
-            Node* temp = root->left;
-            delete root;
-            return temp;
-        }
-
-        Node* temp = findMin(root->right);
-        root->token = temp->token;
-        root->right = deleteNodeHelper(root->right, temp->token);
-    }
-    return root;
 }
 
